@@ -1,17 +1,8 @@
 #include <stdio.h>
-#include <iostream>
 #include <random>
+#include <iostream>
 #include <time.h>
 #include <cstring>
-
-// ##FEITO## Sortear uma matriz 25x25 contendo letras do alfabeto
-// ##FEITO## Ler o arquivo de palavras e sortear uma palavra
-// ##FEITO## Inserir palavra aleatoriamente na tabela (a ordem também deve ser aleatoria)
-// ##FEITO## Apresentar a matriz
-// Solicitar ao usuário uma palavra
-// Informar ao usuário caso a palavra digitada esteja na matriz (independente de ter sido a sorteada e inserida na tabela ou não)
-// ##FEITO## OBS: para cada 3 caracteres sorteados, 2 deles deverão ser vogais 1 consoante
-
 
 int controle = 0;
 char palavra_chave[25];
@@ -114,14 +105,18 @@ void inserirMatriz(char (*ptr_matriz)[25][25]) {
 	int tamanhopalavra = (strlen(palavra_chave)-2);
 
 	//verificar se a palavra cabe na posicao sorteada
-	while (tamanhopalavra < pos_x) {
+	while ((pos_x + tamanhopalavra) >= 25) {
 		pos_x = rand()%25;
 	}
+
+	while ((pos_y + tamanhopalavra) >= 25) {
+		pos_y = rand()%25;
+	}
+	
 
 	std::cout << tamanhopalavra << std::endl;
 	for (int l=0; l<tamanhopalavra; l++){
 		(*ptr_matriz)[pos_x][(pos_y)+flag] = '.';//palavra_chave[l];
-		std::cout << "penes" << std::endl;
 		flag++;
 	}
 }
