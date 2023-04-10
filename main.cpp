@@ -10,14 +10,14 @@ char matriz[25][25];
 void gerarMatriz(char (*ptr_matriz)[25][25]);
 void palavrasMatriz();
 void mostrarMatriz(char (*ptr_matriz)[25][25]);
-void inserirMatriz(char (*ptr_matriz)[25][25]);
+void inserirMatriz(char (*ptr_matriz)[25][25], int eixo);
 char sortearLetra();
 
 int main() {
 	srand(time(NULL));
 	gerarMatriz(&matriz);
 	palavrasMatriz();
-	inserirMatriz(&matriz);
+	inserirMatriz(&matriz, 1); //eixo 1 = horizontal, 2 = vertical
 	mostrarMatriz(&matriz);
 	std::cout << "Palavra chave: " << palavra_chave << std::endl;
 	return 0;
@@ -97,7 +97,7 @@ void palavrasMatriz() {
 	fclose(lista_palavras);	
 }
 
-void inserirMatriz(char (*ptr_matriz)[25][25]) {
+void inserirMatriz(char (*ptr_matriz)[25][25], int eixo) {
 	//gerar posicao aleatoria parar posicionar a palavra na matriz
 	int pos_x = rand()%25; //linha
 	int pos_y = rand()%25; //coluna
@@ -114,10 +114,19 @@ void inserirMatriz(char (*ptr_matriz)[25][25]) {
 	}
 	
 
-	std::cout << tamanhopalavra << std::endl;
-	for (int l=0; l<tamanhopalavra; l++){
-		(*ptr_matriz)[pos_x][(pos_y)+flag] = '.';//palavra_chave[l];
-		flag++;
+	//horizontal
+	if (eixo == 1){
+		for (int l=0; l<tamanhopalavra; l++){
+			(*ptr_matriz)[pos_x][(pos_y)+flag] = '.';//palavra_chave[l];
+			flag++;
+		}
+	}
+	//vertical
+	if (eixo == 2){
+		for (int l=0; l<tamanhopalavra; l++){
+			(*ptr_matriz)[(pos_x + flag)][pos_y] = '.';//palavra_chave[l];
+			flag++;
+		}
 	}
 }
 
