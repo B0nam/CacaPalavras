@@ -14,10 +14,6 @@ void palavrasMatriz();
 void mostrarMatriz(char (*ptr_matriz)[25][25]);
 void inserirMatriz(char (*ptr_matriz)[25][25], int eixo);
 void buscarPalavra(char (*ptr_matriz)[25][25], char palavraUsuario[25]);
-int horizontal_x = -1;
-int horizontal_y = -1;
-int vertical_x = -1;
-int vertical_y = -1;
 char sortearLetra();
 
 
@@ -25,7 +21,7 @@ int main() {
 	srand(time(NULL));
 	gerarMatriz(&matriz);
 	palavrasMatriz();
-	inserirMatriz(&matriz, 2); //eixo 1 = horizontal, 2 = vertical
+	inserirMatriz(&matriz, 1); //eixo 1 = horizontal, 2 = vertical
 	mostrarMatriz(&matriz);
 	std::cout << "Palavra chave: " << palavra_chave << std::endl;
 
@@ -33,16 +29,7 @@ int main() {
 	std::cout << "Digite uma palavra: ";
 	std::cin >> palavraDigitada;
 	buscarPalavra(&matriz, palavraDigitada);
-
-	std::cout << "Palavra encontrada: " << palavra_encontrada << std::endl;
-	std::cout << "Posicao palavra: " << palavra_posicao << std::endl;
-	std::cout << "HORIZONTAL_X: " << horizontal_x << std::endl;
-	std::cout << "HORIZONTAL_Y: " << horizontal_y << std::endl;
-	std::cout << "VERTICAL_X: " << vertical_x << std::endl;
-	std::cout << "VERTICAL_Y: " << vertical_y << std::endl;
-
-	mostrarMatriz(&matriz);
-
+	
 	return 0;
 }
 
@@ -140,14 +127,14 @@ void inserirMatriz(char (*ptr_matriz)[25][25], int eixo) {
 	//horizontal
 	if (eixo == 1){
 		for (int l=0; l<tamanhopalavra; l++){
-			(*ptr_matriz)[pos_x][(pos_y)+flag] = palavra_chave[l];
+			(*ptr_matriz)[pos_x][(pos_y)+flag] = '.';//palavra_chave[l];
 			flag++;
 		}
 	}
 	//vertical
 	if (eixo == 2){
 		for (int l=0; l<tamanhopalavra; l++){
-			(*ptr_matriz)[(pos_x + flag)][pos_y] = palavra_chave[l];
+			(*ptr_matriz)[(pos_x + flag)][pos_y] = '.';//palavra_chave[l];
 			flag++;
 		}
 	}
@@ -157,11 +144,7 @@ void mostrarMatriz(char (*ptr_matriz)[25][25]) {
 	std::cout << "Mostrando matriz..." << std::endl;
 	for (int x=0; x<25; x++){
 		for (int y=0;y<25;y++) {
-			if ((x == vertical_x || x == horizontal_x) && (y == vertical_y || y == horizontal_y)) {
-				std::cout << " \033[1;32m" << (*ptr_matriz)[x][y] << "\033[0m ";
-			} else {
-				std::cout << " " << (*ptr_matriz)[x][y] << " ";
-			}
+			std::cout << " " << (*ptr_matriz)[x][y] << " ";
 		}
 			std::cout << std::endl;
 	}
@@ -179,34 +162,40 @@ void buscarPalavra(char (*ptr_matriz)[25][25],char palavraUsuario[25]) {
 			strncat(linha_comprimida, &letra, 1);
 		}
 		//busca a palavra na linha.
+		//
+		for(int h=0;h<=25;h++){
+			std::cout << " " << linha_comprimida[h] << " " << std::endl;
+		}
+		//
+		//
 		char *resultado = strstr(linha_comprimida, palavraUsuario);
 		if (resultado != NULL) {
 			//armazena a posicao inicial onde a palavra foi encontrada
+			std::cout << "Palavra encontrada: " << palavra_encontrada << std::endl;	
+			std::cout << "Palavra usuario: " << palavraUsuario << std::endl;	
 			strcpy(palavra_posicao, resultado);
 			strcpy(palavra_encontrada, palavraUsuario);
-			horizontal_x = resultado - linha_comprimida;
-			horizontal_y = t; //armazena a linha onde a palavra foi encontrada
+			std::cout << "Palavra encontrada: " << palavra_encontrada << std::endl;	
 		}
 		//zera a linha_comprimida.
 		std::memset(linha_comprimida, 0, sizeof(linha_comprimida));
 	}
-	
+/*
 	for (int t=0;t<25;t++){ //para as 25 colunas
 		for (int y=0;y<25;y++){
-			char letra = (*ptr_matriz)[y][t]; 
-			strncat(coluna_comprimida, &letra, 1);
+			coluna_comprimida = strcat(coluna_comprimida, (*ptr_matriz)[y][t])
 		}
-		//busca a palavra na coluna.
+		//busca a palavra na linha.
 		char *resultado = strstr(coluna_comprimida, palavraUsuario);
 		if (resultado != NULL) {
 			//armazena a posicao inicial onde a palavra foi encontrada
-			strcpy(palavra_posicao, resultado);
-			strcpy(palavra_encontrada, palavraUsuario);
-			vertical_x = resultado - coluna_comprimida;
-			vertical_y = t; //armazena a coluna onde a palavra foi encontrada
+			palavra_encontrada[0] = resultado;
+			palavra_encontrada[1] = palavraUsuario;
 		}
 		//zera a linha_comprimida.
-		std::memset(coluna_comprimida, 0, sizeof(coluna_comprimida));
+		std::memset(linha_comprimida, 0, 26);
 	}
+	*/
 }
 
+//comprime a coluna e busca a palavra horizontalmente
