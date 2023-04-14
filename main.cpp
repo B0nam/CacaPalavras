@@ -14,10 +14,13 @@ void palavrasMatriz();
 void mostrarMatriz(char (*ptr_matriz)[25][25]);
 void inserirMatriz(char (*ptr_matriz)[25][25], int eixo);
 void buscarPalavra(char (*ptr_matriz)[25][25], char palavraUsuario[25]);
-int horizontal_x = -1;
-int horizontal_y = -1;
-int vertical_x = -1;
-int vertical_y = -1;
+int horizontal_inicial_x = -1;
+int horizontal_inicial_y = -1;
+int horizontal_final_x = -1;
+int horizontal_final_y = -1;
+int vertical_inicial_x = -1;
+int vertical_inicial_y = -1;
+int vertical_final_x = -1;
 char sortearLetra();
 
 
@@ -36,10 +39,13 @@ int main() {
 
 	std::cout << "Palavra encontrada: " << palavra_encontrada << std::endl;
 	std::cout << "Posicao palavra: " << palavra_posicao << std::endl;
-	std::cout << "HORIZONTAL_X: " << horizontal_x << std::endl;
-	std::cout << "HORIZONTAL_Y: " << horizontal_y << std::endl;
-	std::cout << "VERTICAL_X: " << vertical_x << std::endl;
-	std::cout << "VERTICAL_Y: " << vertical_y << std::endl;
+	std::cout << "horizontal_inicial_x: " << horizontal_inicial_x << std::endl;
+	std::cout << "horizontal_inicial_y: " << horizontal_inicial_y << std::endl;
+	std::cout << "horizontal_final_y: " << horizontal_final_y << std::endl;
+	std::cout << "vertical_inicial_X: " << vertical_inicial_x << std::endl;
+	std::cout << "vertical_inicial_y: " << vertical_inicial_y << std::endl;
+	std::cout << "vertical_final_X: " << vertical_final_x << std::endl;
+
 
 	mostrarMatriz(&matriz);
 
@@ -157,7 +163,7 @@ void mostrarMatriz(char (*ptr_matriz)[25][25]) {
 	std::cout << "Mostrando matriz..." << std::endl;
 	for (int x=0; x<25; x++){
 		for (int y=0;y<25;y++) {
-			if ((x == vertical_x || x == horizontal_x) && (y == vertical_y || y == horizontal_y)) {
+			if (x >= vertical_inicial_x && x <= vertical_final_x) {
 				std::cout << " \033[1;32m" << (*ptr_matriz)[x][y] << "\033[0m ";
 			} else {
 				std::cout << " " << (*ptr_matriz)[x][y] << " ";
@@ -184,8 +190,9 @@ void buscarPalavra(char (*ptr_matriz)[25][25],char palavraUsuario[25]) {
 			//armazena a posicao inicial onde a palavra foi encontrada
 			strcpy(palavra_posicao, resultado);
 			strcpy(palavra_encontrada, palavraUsuario);
-			horizontal_x = resultado - linha_comprimida;
-			horizontal_y = t; //armazena a linha onde a palavra foi encontrada
+			horizontal_inicial_x = resultado - linha_comprimida;
+			horizontal_final_x = horizontal_inicial_x + strlen(palavraUsuario);
+			horizontal_inicial_y = t; //armazena a linha onde a palavra foi encontrada
 		}
 		//zera a linha_comprimida.
 		std::memset(linha_comprimida, 0, sizeof(linha_comprimida));
@@ -202,11 +209,11 @@ void buscarPalavra(char (*ptr_matriz)[25][25],char palavraUsuario[25]) {
 			//armazena a posicao inicial onde a palavra foi encontrada
 			strcpy(palavra_posicao, resultado);
 			strcpy(palavra_encontrada, palavraUsuario);
-			vertical_x = resultado - coluna_comprimida;
-			vertical_y = t; //armazena a coluna onde a palavra foi encontrada
+			vertical_inicial_x = resultado - coluna_comprimida;
+			vertical_final_x = vertical_inicial_x + strlen(palavraUsuario);
+			vertical_inicial_y = t; //armazena a coluna onde a palavra foi encontrada
 		}
 		//zera a linha_comprimida.
 		std::memset(coluna_comprimida, 0, sizeof(coluna_comprimida));
 	}
 }
-
