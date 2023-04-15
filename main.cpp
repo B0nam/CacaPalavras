@@ -10,6 +10,8 @@ char palavra_encontrada[25]; //armazena a posicao inicial e a palavra encontrada
 char palavra_posicao[25]; 
 char matriz[25][25];
 void gerarMatriz(char (*ptr_matriz)[25][25]);
+void Clear();
+void Menu();
 void palavrasMatriz();
 void mostrarMatriz(char (*ptr_matriz)[25][25]);
 void inserirMatriz(char (*ptr_matriz)[25][25]);
@@ -24,9 +26,11 @@ char sortearLetra();
 int eixo = 0;
 
 int main() {
+
+	Menu();
+
 	srand(time(NULL));
 	eixo = (rand()%2+1);
-	eixo = 1;
 	gerarMatriz(&matriz);
 	palavrasMatriz();
 	inserirMatriz(&matriz); //eixo 1 = horizontal, 2 = vertical
@@ -34,24 +38,24 @@ int main() {
 	std::cout << "Palavra chave: " << palavra_chave << std::endl;
 
 	char palavraDigitada[25];
-	palavra_chave[strlen(palavra_chave)-2] = '\0';
-	while (true) {
+	char palavra_chave_check[25];
+
+	int tamanho_palavra = strlen(palavra_chave);
+	strncpy(palavra_chave_check, palavra_chave, tamanho_palavra - 1);
+	palavra_chave_check[tamanho_palavra - 1] = '\0';
+	
+	do {
 		std::cout << "Digite uma palavra: ";
 		std::cin >> palavraDigitada;
 		for (int i = 0; i < strlen(palavraDigitada); i++){
 			palavraDigitada[i] = toupper(palavraDigitada[i]);
 		}
 
-		std::cout << palavraDigitada << " - " << strlen(palavraDigitada) << std::endl;
-		std::cout << palavra_chave << " - " << strlen(palavra_chave) << std::endl;
-
-		if (std::strcmp(palavraDigitada, palavra_chave) == 0) {
-			break;
-		}
-	}
+	} while (std::strcmp(palavraDigitada, palavra_chave_check) != 0);
 
 	buscarPalavra(&matriz, palavraDigitada);
 
+/*  // SAIDA DE DEBUG, UTILIZADA PARA VISUALIZAR A POSIÇÃO DA PALAVRA.
 	std::cout << "Palavra encontrada: " << palavra_encontrada << std::endl;
 	std::cout << "Posicao palavra: " << palavra_posicao << std::endl;
 	std::cout << "horizontal_inicial_x: " << horizontal_inicial_x << std::endl;
@@ -60,11 +64,34 @@ int main() {
 	std::cout << "vertical_inicial_X: " << vertical_inicial_x << std::endl;
 	std::cout << "vertical_inicial_y: " << vertical_inicial_y << std::endl;
 	std::cout << "vertical_final_X: " << vertical_final_x << std::endl;
-
-
+*/	
 	mostrarMatriz(&matriz);
+	std::cout << "Palavra chave: " << palavra_chave << std::endl;
+	std::cout << "### PARABÉNS, VOCÊ ENCONTROU A PALAVRA ###" << std::endl;
 
 	return 0;
+}
+
+void Clear()
+{
+    std::cout << "\x1B[2J\x1B[H"; //limpa o terminal
+}
+
+void Menu() {
+	Clear();
+	std::cout << "-------------------------------------------------------------------" << std::endl;
+	std::cout << "                        JOGO - Caça Palavra                        " << std::endl;						 
+	std::cout << "-------------------------------------------------------------------" << std::endl;
+	std::cout << "Jogo realizado como trabalho para o curso de engenharia de software" << std::endl;
+	std::cout << " " << std::endl;
+	std::cout << "Feito por: Daniel Bonam Rissardi" << std::endl;
+	std::cout << "RA: 22013838-2" << std::endl;
+	std::cout << "Git: github.com/B0nam" << std::endl;
+	std::cout << "-------------------------------------------------------------------" << std::endl;
+	std::cout << "                 - _ - Apete Enter para continuar - _ -            " << std::endl;
+	getchar();
+	Clear();
+
 }
 
 void gerarMatriz(char (*ptr_matriz)[25][25]) {
@@ -122,7 +149,6 @@ void palavrasMatriz() {
 	while (fgets(palavra, 25, lista_palavras) != NULL) {
 		num_linhas++;
 	}
-	std::cout << "O numero de linhas do arquivo eh: " << num_linhas << std::endl;
 
 	//volta o ponteiro ao inicio
 	rewind(lista_palavras);
@@ -146,7 +172,7 @@ void inserirMatriz(char (*ptr_matriz)[25][25]) {
 	int pos_x = rand()%25; //linha
 	int pos_y = rand()%25; //coluna
 	int flag = 0;
-	int tamanhopalavra = (strlen(palavra_chave)-2);
+	int tamanhopalavra = (strlen(palavra_chave)-1);
 
 	//verificar se a palavra cabe na posicao sorteada
 	while ((pos_x + tamanhopalavra) >= 25) {
@@ -175,12 +201,12 @@ void inserirMatriz(char (*ptr_matriz)[25][25]) {
 }
 
 void mostrarMatriz(char (*ptr_matriz)[25][25]) {
-	std::cout << "Mostrando matriz..." << std::endl;
+	Clear();
 	for (int x=0; x<25; x++){
 		for (int y=0;y<25;y++) {
 			if (eixo == 2 && x >= vertical_inicial_x && x <= vertical_final_x && y == vertical_inicial_y) {
 				std::cout << " \033[1;32m" << (*ptr_matriz)[x][y] << "\033[0m ";
-			} else if (eixo == 1 && x >= horizontal_inicial_x) {
+			} else if (eixo == 1 && x == horizontal_inicial_y && y >= horizontal_inicial_x && y <= horizontal_final_x) {
 				std::cout << " \033[1;32m" << (*ptr_matriz)[x][y] << "\033[0m ";
 			} else {
 				std::cout << " " << (*ptr_matriz)[x][y] << " ";
@@ -189,24 +215,6 @@ void mostrarMatriz(char (*ptr_matriz)[25][25]) {
 			std::cout << std::endl;
 	}
 }
-
-/*
-void mostrarMatriz(char (*ptr_matriz)[25][25]) {
-	std::cout << "Mostrando matriz..." << std::endl;
-	for (int x=0; x<25; x++){
-		for (int y=0;y<25;y++) {
-			if (x >= vertical_inicial_x && x <= vertical_final_x && y == vertical_inicial_y ){
-				std::cout << " \033[1;32m" << (*ptr_matriz)[x][y] << "\033[0m ";
-			} else if (eixo == 2 && x >= horizontal_inicial_x && x <= horizontal_final_x && y == horizontal_inicial_y){
-				std::cout << " \033[1;32m" << (*ptr_matriz)[x][y] << "\033[0m ";			
-			} else {
-				std::cout << " " << (*ptr_matriz)[x][y] << " ";
-			}
-		}
-			std::cout << std::endl;
-	}
-}
-*/
 
 //busca horizontalmente e depois verticalmente na matriz
 //comprime a linha e busca a palavra na linha.
