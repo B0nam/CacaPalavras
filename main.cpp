@@ -35,7 +35,7 @@ int main() {
 	palavrasMatriz();
 	inserirMatriz(&matriz); //eixo 1 = horizontal, 2 = vertical
 	mostrarMatriz(&matriz);
-	std::cout << "Palavra chave: " << palavra_chave << std::endl;
+//	std::cout << "Palavra chave: " << palavra_chave << std::endl;
 
 	char palavraDigitada[25];
 	char palavra_chave_check[25];
